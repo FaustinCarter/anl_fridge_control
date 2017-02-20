@@ -31,21 +31,25 @@ Basic fridge control functions
 ------------------------------
 basic_functions.py contains various functions for day to day fridge functions.
 
--zero_everything(): A function that turns all voltages to 0.00, and turns off the PID heater.
-  Parameters: None
-  Returns: None
+  zero_everything(): A function that turns all voltages to 0.00, and turns off the PID heater.
+    Parameters: None      Returns: None
 
--autocycle(): Runs an automated cycle (takes about 9 hours)
-  Parameters: current temperature logfile
-  Returns: None
+  autocycle(): Runs an automated cycle (takes about 9 hours)
+    Parameters: current temperature logfile      Returns: None
 
--finish_cycle(): Runs the part of a cycle that waits for the heat exchanger temperature to rise and then cools the fridge to base.
-  Called by other functions.
+  finish_cycle(): Runs the part of a cycle that waits for the heat exchanger temperature to rise and then cools the fridge to base.
+    Called by other functions.
 
--start_of_day(): Warms the UC Head to 650mK, then heats and tunes SQUIDs and takes a rawdump.
-  Parameters: current temperature logfile
-  Returns: some output directories for heating and tuning
+  start_of_day(): Warms the UC Head to 650mK, then heats and tunes SQUIDs and takes a rawdump.
+    Parameters: current temperature logfile      Returns: some output directories for heating and tuning
 
 Wafer testing
 -------------
-Some 
+Some functions for measuring and analyzing R(T) and G(T) are included.
+
+Miscellaneous
+-------------
+There are also some miscellaneous helper scripts for specific extra testing.
+
+  sinusoidal.py: generates sinusoidal voltages through function sinuvolt()
+    Parameters: name=PS name, A=amplitude, freq=frequency, y=offset from 0, tint=time interval, R=resistance, t0=initial time (default=0) 
