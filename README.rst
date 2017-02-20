@@ -93,7 +93,9 @@ Miscellaneous
 There are also some miscellaneous helper scripts for specific extra testing.
 
 - sinusoidal.sinuvolt: generates sinusoidal voltages.  The purpose of this function has thus far been to generate a sinusoidally varying voltage to run through a Helmholtz coil, for magnetic testing.
+
   - Parameters: name, A, freq, tint, R, y (default=0), t0 (default=0)
+  
     - name: the variable that has PREVIOUSLY been attached to a power supply (name=PS.PowerSupply(4,1))
     - A: amplitude (the highest number that you want the voltage to reach)
     - freq: the frequency of the sinusoidal curve (this is a mathematical property)
