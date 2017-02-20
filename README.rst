@@ -49,12 +49,12 @@ Basic fridge control functions
 ------------------------------
 basic_functions.py contains various functions for day-to-day fridge functions.
 
-- basic_functions.zero_everything(): Turns all voltages to 0.00, and turns off the PID heater.
+- basic_functions.zero_everything: Turns all voltages to 0.00, and turns off the PID heater.
 
   - Parameters: None
   - Returns: None
 
-- basic_functions.autocycle(): Runs an automated cycle (takes about 9 hours)
+- basic_functions.autocycle: Runs an automated cycle (takes about 9 hours)
 
   - Parameters: current temperature logfile, start (default=False)
   
@@ -63,7 +63,7 @@ basic_functions.py contains various functions for day-to-day fridge functions.
     
   - Returns: None
 
-- basic_functions.start_of_day(): Warms the UC Head to 650mK, then heats and tunes SQUIDs and takes a rawdump.
+- basic_functions.start_of_day: Warms the UC Head to 650mK, then heats and tunes SQUIDs and takes a rawdump.
 
   - Parameters: current temperature logfile, set_squid_feedback (default=False), set_gain (default=False)
   
@@ -73,7 +73,7 @@ basic_functions.py contains various functions for day-to-day fridge functions.
     
   - Returns: some output directories for heating and tuning
 
-- basic_functions.finish_cycle(): Runs the part of a cycle that waits for the heat exchanger temperature to rise and then cools the fridge to base.
+- basic_functions.finish_cycle: Runs the part of a cycle that waits for the heat exchanger temperature to rise and then cools the fridge to base.
 
   - Called by other functions; can be called if you are manually calling part of the cycle (i.e. if something goes wrong midway through)
   - Parameters: current temperature logfile
@@ -87,6 +87,21 @@ Pending update: autocycle will become an independent python script
 Wafer testing
 -------------
 Some functions for measuring and analyzing R(T) and G(T) are included.
+
+- measure_GofT overbiases the bolometers at 650 mK, then drops temperature and takes an I-V curve.  It repeats this process for several temperatures in a np.linspace that is specified at the start of the script.  Things to change before you run:
+
+  1. hwm_dir should be set to your current hardware map (hwm_anl_complete.yml)
+  2. Currently, the overbias is done by executing the anl_master_script.py file.  This will be changed very soon.
+  
+    - Until it is fixed, anl_master_script should have zero_combs=True, overbias_bolos=True, and everything else set to False
+    
+  3. setpoints should be set to whatever you intend it to be (np.linspace with correct parameters)
+
+- analyze_GofT is a file that has not been changed significantly from Adam's original code.  It includes some functions to measure and plot G(T) for the bolometers.
+
+- measure_RofT overbiases bolometers at 650 mK, turns on ledgerman, and sweeps from high temperature to low temperature.
+
+- rt_analysis_ledgerman parses the ledgerman information and provides the ability to plot R(T) curves for each of the bolometers and find R_normal, R_parasitic, and T_c for each bolometer.  At present, it is best to be copied and pasted into an ipython session, as it does not yet run straight through (it will break).
 
 Miscellaneous
 -------------
