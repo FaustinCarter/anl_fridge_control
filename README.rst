@@ -43,7 +43,7 @@ The following are PowerSupply functions, which are frequently called by other mo
   
 - read_voltage: reads the voltage momentarily being outputted by the power supply (this will not be precisely what you told it to apply)
 
-  -Parameters: None
+  - Parameters: None
 
 - error: asks the power supply to read off all errors in queue
 
