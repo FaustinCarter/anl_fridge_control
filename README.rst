@@ -67,7 +67,9 @@ basic_functions.py contains various functions for day-to-day fridge functions.
 
   - Called by other functions; can be called if you are manually calling part of the cycle (i.e. if something goes wrong midway through)
   - Parameters: current temperature logfile
+  
     - The current logfile is whatever is created by the logger.  You should be using the file called he10_logs/xxxx_read.h5
+    
   - Returns: None
     
 Pending update: autocycle will become an independent python script
