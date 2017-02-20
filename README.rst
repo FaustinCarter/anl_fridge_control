@@ -15,7 +15,25 @@ Relevant Files:
 
 - powersupply.py
 
-At present, the connections to the power supplies and PID heater are controlled through two python modules, powersupply.py and lakeshore.py.  Each of these creates a class (PowerSupply or TempControl), which opens a serial connection to the remote electronics.  powersupply.py must also be supplied driver files (.txt) which specify the type of connection and the remote interface commands.  Here, those driver files are stored as He4p.txt, He4s.txt, He3ICp.txt, He3ICs.txt, He3UCp.txt, and He3UCs.txt.
+At present, the connections to the power supplies and PID heater are controlled through two python modules, powersupply.py and lakeshore.py.  Each of these creates a class (PowerSupply or TempControl), which opens a serial connection to the remote electronics.  powersupply.py must also be supplied driver files (.txt) which specify the type of connection and the remote interface commands.  Here, those driver files are stored as He4p.txt, He4s.txt, He3ICp.txt, He3ICs.txt, He3UCp.txt, and He3UCs.txt.  Below is an example driver file, including all of the information necessary to the fridge control.
+::
+  port=/dev/ttyr12
+  baudrate=9600
+  parity=none
+  stopbits=2
+  bytesize=8
+  timeout=1
+  term=\r\n
+  v_ask=MEAS:VOLT?
+  v_apply=APPL
+  select=INST:NSEL 2
+  idn=*IDN?
+  output_on=OUTP ON
+  remote=SYST:REM
+  error_ask=SYST:ERR?
+  sep=;:
+  vmin=0
+  vmax=35
 
 At present, the powersupply class is set up to retrieve text files in tuplet (box number, output number).  The He4 power supply is box number 1, He3IC power supply is box number 2, and He3UC power supply is box number 3; the pump is always output 1, and the switch is always output 2.  This can be changed at the end of the powersupply.py file.
 
