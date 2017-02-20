@@ -47,16 +47,20 @@ basic_functions.py contains various functions for day-to-day fridge functions.
 - basic_functions.autocycle(): Runs an automated cycle (takes about 9 hours)
 
   - Parameters: current temperature logfile, start (default=False)
+  
     - The current logfile is whatever is created by the logger.  You should be using the file called he10_logs/xxxx_read.h5
     - start=True tells the computer to run the start_of_day function after completing the cycle.
+    
   - Returns: None
 
 - basic_functions.start_of_day(): Warms the UC Head to 650mK, then heats and tunes SQUIDs and takes a rawdump.
 
   - Parameters: current temperature logfile, set_squid_feedback (default=False), set_gain (default=False)
+  
     - The current logfile is whatever is created by the logger.  You should be using the file called he10_logs/xxxx_read.h5
     - set_squid_feedback is a pydfmux call, which sets SQUID feedback if True
     - set_gain is a pydfmux call, which sets gain
+    
   - Returns: some output directories for heating and tuning
 
 - basic_functions.finish_cycle(): Runs the part of a cycle that waits for the heat exchanger temperature to rise and then cools the fridge to base.
