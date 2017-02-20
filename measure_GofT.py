@@ -1,7 +1,7 @@
 # measure_GofT.py
 #
 # Script for using PID control feature of Lakeshore 350 in order to automatically take G(T)
-# measurements (Psat as a function of T). This script isn't totally cryostat-independent, 
+# measurements (Psat as a function of T). This script isn't totally cryostat-independent,
 # but it should be nearly so if you are using a heater close to your UC head to PID control
 # the stage temperature, wait for a separate thermometry near the wafer to stabilize between
 # measurements.
@@ -19,7 +19,6 @@ import numpy as np
 from matplotlib.pylab import switch_backend
 import cPickle as pickle
 from pydfmux.core.utils.conv_functs import build_hwm_query
-from he10_fridge_control.Lauren.basic_functions import start_of_day
 from he10_fridge_control.Lauren.basic_functions import zero_everything
 
 hwm_dir='/home/spt3g/hardware_maps/hwm_anl_20161207_w132/hwm_anl_complete.yml'
@@ -43,20 +42,20 @@ He3UCs = PS.PowerSupply(3,2)
 gbolos=[]
 for bb in bolos.all():
     if (bb.iceboard != None) and (bb.iceboard.serial !=None):
-#        if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==1 and (bb.readout_channel.module.module==2):
-#            gbolos.append(bb)
-#        if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==1 and (bb.readout_channel.module.module==3):
-#            gbolos.append(bb)
-#        if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==1 and (bb.readout_channel.module.module==4):
-#            gbolos.append(bb)
+        if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==1 and (bb.readout_channel.module.module==2):
+            gbolos.append(bb)
+        if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==1 and (bb.readout_channel.module.module==3):
+            gbolos.append(bb)
+        if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==1 and (bb.readout_channel.module.module==4):
+            gbolos.append(bb)
         if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==2 and (bb.readout_channel.module.module==1):
             gbolos.append(bb)
         if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==2 and (bb.readout_channel.module.module==2):
             gbolos.append(bb)
         if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==2 and (bb.readout_channel.module.module==3):
             gbolos.append(bb)
-#        if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==2 and (bb.readout_channel.module.module==4):
-#            gbolos.append(bb)
+        if bb.iceboard.serial=='0135' and bb.readout_channel.mezzanine.mezzanine==2 and (bb.readout_channel.module.module==4):
+            gbolos.append(bb)
 
 #gbolos.remove(bolos.all()[174])
 #gbolos.remove(bolos.all()[215])
@@ -173,11 +172,9 @@ for jtemp in range(len(setpoints)):
 
 #    if 'good_bolos' in locals():
 #    	overbias_results = good_bolos.overbias_and_null(cold_overbias=False, serialize=True,carrier_amplitude=0.0135, scale_by_frequency=True)
-#    else:	
+#    else:
 #    	overbias_results = bolos.overbias_and_null(cold_overbias=False, serialize=True,carrier_amplitude=0.0135, scale_by_frequency=True)
 
-
-zero_everything()
 
 print waferstarttemps
 print measurestarttimes
