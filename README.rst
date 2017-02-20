@@ -19,7 +19,7 @@ At present, the connections to the power supplies and PID heater are controlled 
 
 At present, the powersupply class is set up to retrieve text files in tuplet (box number, output number).  The He4 power supply is box number 1, He3IC power supply is box number 2, and He3UC power supply is box number 3; the pump is always output 1, and the switch is always output 2.  This can be changed at the end of the powersupply.py file.
 
-To create each of these connections with the current ANL setup, you can use:
+To create each of these connections with the current ANL setup from an ipython session, you can use:
 ::
   import powersupply as PS
   import lakeshore as LS
@@ -37,25 +37,30 @@ Other modules create these connections for you, so you will generally not need t
 
 Basic fridge control functions
 ------------------------------
-basic_functions.py contains various functions for day to day fridge functions.
+basic_functions.py contains various functions for day-to-day fridge functions.
 
-- basic_functions.zero_everything(): A function that turns all voltages to 0.00, and turns off the PID heater.
-    Parameters
-    ----------
-    None
-    
-    Returns
-    -------
-    None
+- basic_functions.zero_everything(): Turns all voltages to 0.00, and turns off the PID heater.
+  - Parameters: None
+  - Returns: None
 
-- autocycle(): Runs an automated cycle (takes about 9 hours)
-    Parameters: current temperature logfile      Returns: None
+- basic_functions.autocycle(): Runs an automated cycle (takes about 9 hours)
+  - Parameters: current temperature logfile, start (default=False)
+    - The current logfile is whatever is created by the logger.  You should be using the file called he10_logs/xxxx_read.h5
+    - start=True tells the computer to run the start_of_day function after completing the cycle.
+  - Returns: None
 
-  finish_cycle(): Runs the part of a cycle that waits for the heat exchanger temperature to rise and then cools the fridge to base.
-    Called by other functions.
+- basic_functions.start_of_day(): Warms the UC Head to 650mK, then heats and tunes SQUIDs and takes a rawdump.
+  - Parameters: current temperature logfile, set_squid_feedback (default=False), set_gain (default=False)
+    - The current logfile is whatever is created by the logger.  You should be using the file called he10_logs/xxxx_read.h5
+    - set_squid_feedback is a pydfmux call, which sets SQUID feedback if True
+    - set_gain is a pydfmux call, which sets gain
+  - Returns: some output directories for heating and tuning
 
-  start_of_day(): Warms the UC Head to 650mK, then heats and tunes SQUIDs and takes a rawdump.
-    Parameters: current temperature logfile      Returns: some output directories for heating and tuning
+- basic_functions.finish_cycle(): Runs the part of a cycle that waits for the heat exchanger temperature to rise and then cools the fridge to base.
+  - Called by other functions; can be called if you are manually calling part of the cycle (i.e. if something goes wrong midway through)
+  - Parameters: current temperature logfile
+    - The current logfile is whatever is created by the logger.  You should be using the file called he10_logs/xxxx_read.h5
+  - Returns: None
     
 Pending update: autocycle will become an independent python script
 
