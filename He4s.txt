@@ -1,0 +1,17 @@
+port=/dev/ttyr10
+baudrate=9600
+parity=none
+stopbits=2
+bytesize=8
+timeout=1
+term=\r\n
+v_ask=MEAS:VOLT?
+v_apply=APPL P6V,
+select=INST:NSEL 1
+idn=*IDN?
+output_on=OUTP:STAT ON
+remote=SYST:REM
+error_ask=SYST:ERR?
+sep=;:
+vmin=0
+vmax=35
