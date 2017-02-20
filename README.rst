@@ -92,5 +92,12 @@ Miscellaneous
 -------------
 There are also some miscellaneous helper scripts for specific extra testing.
 
-  sinusoidal.py: generates sinusoidal voltages through function sinuvolt()
-    Parameters: name=PS name, A=amplitude, freq=frequency, y=offset from 0, tint=time interval, R=resistance, t0=initial time (default=0) 
+- sinusoidal.sinuvolt: generates sinusoidal voltages.  The purpose of this function has thus far been to generate a sinusoidally varying voltage to run through a Helmholtz coil, for magnetic testing.
+  - Parameters: name, A, freq, tint, R, y (default=0), t0 (default=0)
+    - name: the variable that has PREVIOUSLY been attached to a power supply (name=PS.PowerSupply(4,1))
+    - A: amplitude (the highest number that you want the voltage to reach)
+    - freq: the frequency of the sinusoidal curve (this is a mathematical property)
+    - tint: the time interval between changing voltages
+    - R: known resistance of a resistor in series with the power supply
+    - y: the offset from 0 that you want the voltage to start fluctuating at
+    - t0: start time (should usually be 0)
