@@ -35,6 +35,36 @@ To create each of these connections with the current ANL setup from an ipython s
   
 Other modules create these connections for you, so you will generally not need to write this out.  However, if you wish to change the setup, you will need to make sure that all other files that control temperature are written correctly for your current setup.
 
+The following are PowerSupply functions, which are frequently called by other modules.
+
+- set_voltage: sets the voltage of a particular output to a given value (between 0.00 and the maximum output of the power supply)
+
+  - Parameters: voltage (float, out to 2 decimal places)
+  
+- read_voltage: reads the voltage momentarily being outputted by the power supply (this will not be precisely what you told it to apply)
+
+  -Parameters: None
+
+- error: asks the power supply to read off all errors in queue
+
+  - Parameters: None
+  
+- who_am_i: asks the power supply to return the identification for the power supply
+
+  - Parameters: None
+
+- remote_set: puts the power supply in remote mode
+
+  - Parameters: None
+  
+- set_vi: sets both the voltage and the current output of the power supply
+
+  - Parameters: voltage (float); current (float)
+
+Sometimes, it is helpful to talk directly to the power supplies (when you need to look at something that is not a preset function).  Below is an example of how this could be called.
+::
+  He4p.serial_connex.write('APPL? \r\n')
+
 Fridge logging
 --------------
 The fridge_logger_anl.py code [[NOT CURRENTLY IN THIS REPO, will be updated soon]] reads in data from Lakeshore340 and Lakeshore218 boxes.  It then outputs data to a .h5 file and a _read.h5 file, which are used to create plots and current temperature readings on the website.  The fridge logger can be called as
