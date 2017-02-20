@@ -35,6 +35,16 @@ To create each of these connections with the current ANL setup from an ipython s
   
 Other modules create these connections for you, so you will generally not need to write this out.  However, if you wish to change the setup, you will need to make sure that all other files that control temperature are written correctly for your current setup.
 
+Fridge logging
+--------------
+The fridge_logger_anl.py code [[NOT CURRENTLY IN THIS REPO, will be updated soon]] reads in data from Lakeshore340 and Lakeshore218 boxes.  It then outputs data to a .h5 file and a _read.h5 file, which are used to create plots and current temperature readings on the website.  The fridge logger can be called as
+::
+  python /home/spt3g/he10_fridge_control/logger/fridge_logger_anl.py
+
+You will then be prompted for a filename, which should be inputted as
+::
+  he10_logs/filename.h5
+
 Basic fridge control functions
 ------------------------------
 basic_functions.py contains various functions for day-to-day fridge functions.
