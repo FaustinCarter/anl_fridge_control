@@ -146,7 +146,7 @@ Celsius temperature for channel A, you could type
 
 .. code:: python
   ChaseLS.connex.write('CRDG? A\r\n')
-  ChaseLS.readline()
+  ChaseLS.connex.readline()
 
 Fridge logging
 --------------
