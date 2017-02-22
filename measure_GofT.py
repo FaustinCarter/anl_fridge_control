@@ -11,15 +11,14 @@
 # 27 April 2016
 
 import pydfmux
-import he10_fridge_control.Lauren.lakeshore as LS
-import he10_fridge_control.Lauren.powersupply as PS
+from anl_fridge_control.serial_connections import *
 import os,time
 import datetime
 import numpy as np
 from matplotlib.pylab import switch_backend
 import cPickle as pickle
 from pydfmux.core.utils.conv_functs import build_hwm_query
-from he10_fridge_control.Lauren.basic_functions import zero_everything
+from anl_fridge_control.basic_functions import zero_everything
 
 hwm_dir='/home/spt3g/hardware_maps/hwm_anl_20161207_w132/hwm_anl_complete.yml'
 board='0135'

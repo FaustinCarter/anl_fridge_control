@@ -116,6 +116,7 @@ you can do so by accessing the serial connection (through the function serial_co
 and writing the prompt that the power supply should be able to read.  For example,
 if you wanted to know what the voltage you last set for the He4 pump was, you
 could type
+
 .. code:: python
   He4p.serial_connex.write('APPL?\r\n')
   He4p.serial_connex.readline()
@@ -142,6 +143,7 @@ Lakeshore340 Temperature Controller:
 If you want to send a query or command that is not one of the preset functions,
 you can do so with the connex function.  For example, if you wanted to query the
 Celsius temperature for channel A, you could type
+
 .. code:: python
   ChaseLS.connex.write('CRDG? A\r\n')
   ChaseLS.readline()
@@ -173,7 +175,8 @@ The following are PowerSupply functions, which are frequently called by other mo
   - Parameters: voltage (float); current (float)
 
 Sometimes, it is helpful to talk directly to the power supplies (when you need to look at something that is not a preset function).  Below is an example of how this could be called.
-::
+
+.. code:: python
   He4p.serial_connex.write('APPL? \r\n')
 
 Fridge logging
@@ -186,11 +189,13 @@ The fridge_logger_anl.py code [[NOT CURRENTLY IN THIS REPO, will be updated soon
 reads in data from Lakeshore340 and Lakeshore218 boxes. It then outputs data to
 a .h5 file and a _read.h5 file, which are used to create plots and current
 temperature readings on the website. The fridge logger can be called as
-::
+
+.. code:: python
   python /home/spt3g/he10_fridge_control/logger/fridge_logger_anl.py
 
 You will then be prompted for a filename, which should be inputted as
-::
+
+.. code:: python
   he10_logs/filename.h5
 
 The fridge logger also publishes its read information to a local website, which
