@@ -1,18 +1,17 @@
 # measure_RofT.py
 #
 # A script for automating R(T) measurements.
-# 
+#
 # Adam Anderson
 # adama@fnal.gov
 # 27 April 2016
 
-import he10_fridge_control.Lauren.lakeshore as LS
-import he10_fridge_control.Lauren.powersupply as PS
+from anl_fridge_control.serial_connections import *
 import pydfmux
 import time
 import os
 import datetime
-import numpy as npged 
+import numpy as npged
 import cPickle as pickle
 import subprocess
 
@@ -55,7 +54,7 @@ H3ICs.remote_set()
 
 # unlatch the switches
 print('Turning off switches...')
-H3UCs.set_voltage(0.0)   
+H3UCs.set_voltage(0.0)
 H3ICs.set_voltage(0.0)
 print('Heating up fridge...')
 H3UCp.set_voltage(3.0)
@@ -95,12 +94,12 @@ proc_ledgerman = subprocess.Popen(['python', ledgerman_path, hwm_file, R_data_pa
 
 # latch the switches to help with cooldown
 #print('Turning on switches...')
-#H3UCs.set_voltage(4.0)   
+#H3UCs.set_voltage(4.0)
 #H3ICs.set_voltage(4.0)
 #time.sleep(5)
 #print('Turning off switches...')
-#H3UCs.set_voltage(0.0)   
-#H3ICs.set_voltage(0.0) 
+#H3UCs.set_voltage(0.0)
+#H3ICs.set_voltage(0.0)
 #time.sleep(60)
 
 
