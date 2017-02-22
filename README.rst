@@ -118,6 +118,7 @@ if you wanted to know what the voltage you last set for the He4 pump was, you
 could type
 
 .. code:: python
+
   He4p.serial_connex.write('APPL?\r\n')
   He4p.serial_connex.readline()
 
@@ -145,6 +146,7 @@ you can do so with the connex function.  For example, if you wanted to query the
 Celsius temperature for channel A, you could type
 
 .. code:: python
+
   ChaseLS.connex.write('CRDG? A\r\n')
   ChaseLS.connex.readline()
 
@@ -160,11 +162,13 @@ a .h5 file and a _read.h5 file, which are used to create plots and current
 temperature readings on the website. The fridge logger can be called as
 
 .. code:: python
+
   python /home/spt3g/he10_fridge_control/logger/fridge_logger_anl.py
 
 You will then be prompted for a filename, which should be inputted as
 
 .. code:: python
+
   he10_logs/filename.h5
 
 The fridge logger also publishes its read information to a local website, which
