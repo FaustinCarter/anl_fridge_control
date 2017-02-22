@@ -12,13 +12,25 @@ Relevant Files:
 
 - Driver files (xxxx.txt)
 
-- serial_connections.py
-
 - lakeshore.py
 
 - powersupply.py
 
-At present, the connections to the power supplies and PID heater are controlled through two python modules, powersupply.py and lakeshore.py.  Each of these creates a class (PowerSupply or TempControl), which opens a serial connection to the remote electronics.  powersupply.py must also be supplied driver files (.txt) which specify the type of connection and the remote interface commands.  Here, those driver files are stored as He4p.txt, He4s.txt, He3ICp.txt, He3ICs.txt, He3UCp.txt, and He3UCs.txt.  Below is an example driver file, including all of the information necessary to the fridge control.
+- serial_connections.py
+
+Currenty, we can connect to our power supplies and Lakeshore boxes through serial
+connections. Each of these electronics boxes is plugged into a port on the MOXA
+box, which runs a connection to the computer. However, because all power supplies
+are different, we need to supply the computer an easy way to talk to these boxes.
+This is done with driver files, which give a list of the remote interface commands,
+as well as serial connection information, that can be used to communicate.
+
+Currently, the driver files are stored as He4p.txt, He4s.txt, He3ICp.txt, He3ICs.txt,
+He3UCp.txt, and He3UCs.txt.  Each driver file corresponds to one output on a
+power supply, and takes the following format.  All of the keys in this list are
+needed to make the connections and send the correct information, so it is important
+to include all of them and ensure that the information matches that which your
+power supply needs.
 ::
   port=/dev/ttyr12
   baudrate=9600
@@ -37,7 +49,7 @@ At present, the connections to the power supplies and PID heater are controlled 
   sep=;:
   vmin=0
   vmax=35
-=======
+
 At present, the connections to the power supplies and PID heater are controlled
 through two python modules, powersupply.py and lakeshore.py. Each of these
 creates a class (PowerSupply or TempControl), which opens a serial connection to
