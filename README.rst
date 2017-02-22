@@ -296,10 +296,9 @@ There are also some miscellaneous helper scripts for specific extra testing.
 function has thus far been to generate a sinusoidally varying voltage to run
 through a Helmholtz coil, for magnetic testing.
 
-  - Parameters: name, A, freq, tint, R, y (default=0), t0 (default=0)
+  - Parameters: driverfile, A, freq, tint, R, y (default=0), t0 (default=0)
 
-    - name: the variable that has PREVIOUSLY been attached to a power supply
-    (i.e., name=PS.PowerSupply(4,1))
+    - driverfile: the driver file for the power supply, stored in he10_fridge_control/Lauren
     - A: amplitude (the highest number that you want the voltage to reach)
     - freq: the frequency of the sinusoidal curve (this is a mathematical
     property)
