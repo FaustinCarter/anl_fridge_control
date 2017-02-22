@@ -24,49 +24,11 @@ import he10_fridge_control.control.gettemp as gt
 
 import numpy as np
 from pydfmux.core.utils.conv_functs import build_hwm_query
-import he10_fridge_control.Lauren.powersupply as PS
-import he10_fridge_control.Lauren.lakeshore as LS
+from anl_fridge_control.serial_connections import *
 
 ###############################################################################
 ############## Edit this first part to do what you want it to do ##############
 ###############################################################################
-
-# Set up the temperature controller to look specifically at the ultracold head
-# and tell the computer which channel the PID should heat
-
-channel_of_interest = 'A'
-PID_channel = 'A'
-
-# Make a connection to the temperature controller, name the channels
-
-ChaseLS = LS.TempControl('/dev/ttyr18',  ['A', 'B', 'C1', 'C2'])
-
-# Configure the PID
-
-ChaseLS.config_output(1,1,ChaseLS.channel_names.index(PID_channel)+1)
-
-# Set variables to connect to each output of each power supply
-
-He4p = PS.PowerSupply(1,1)
-He4s = PS.PowerSupply(1,2)
-He3ICp = PS.PowerSupply(2,1)
-He3ICs = PS.PowerSupply(2,2)
-He3UCp = PS.PowerSupply(3,1)
-He3UCs = PS.PowerSupply(3,2)
-
-# Connect with the temperature monitor
-
-#temp_monitor=serial.Serial(port='/dev/ttyr13',parity=serial.PARITY_ODD, baudrate=9600,bytesize=serial.SEVENBITS,timeout=10)
-
-# Tell the computer how to read in temperatures from the monitor and what the
-# name of each channel is
-
-#def get_monitor_temp():
-#	temp_monitor.write('krdg?\r\n')
-#	time.sleep(0.01)
-#	ans=temp_monitor.readline()
-#	monitor={'He4 Switch':float(ans.split(',')[0]),'Inter Switch':float(ans.split(',')[1]),'Ultra Pump':float(ans.split(',')[2]),'Ultra Switch':float(ans.split(',')[3]),'Inter Pump':float(ans.split(',')[4]),'Main Plate':float(ans.split(',')[5]),'Heat Exchanger':float(ans.split(',')[6]),'He4 Pump':float(ans.split(',')[7])}
-#	return monitor
 
 # Choose a hardware map and IceBoard
 
@@ -214,7 +176,7 @@ def start_of_day(logfile, set_squid_feedback=False, set_gain=False):
 
 	# take a rawdump
 	print 'Taking a rawdump.'
-	results=rm.call_with(pydfmux.algorithms.measurement.rawdump.take_rawdump,num_samples=50000)
+	results=rm.take_rawdump(num_samples=50000)
 
 	print 'Startup is complete.  Start whatever you want to do today!'
 
