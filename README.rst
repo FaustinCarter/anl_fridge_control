@@ -59,11 +59,17 @@ the remote electronics. powersupply.py must also be supplied driver files
 Here, those driver files are stored as He4p.txt, He4s.txt, He3ICp.txt, He3ICs.txt,
 He3UCp.txt, and He3UCs.txt.
 
-At present, the powersupply class is set up to retrieve text files in tuplet
-(box number, output number). The He4 power supply is box number 1, He3IC power
-supply is box number 2, and He3UC power supply is box number 3; the pump is
-always output 1, and the switch is always output 2. This can be changed at the
-end of the powersupply.py file.
+The PowerSupply class is set up to retrieve text files from the
+he10_fridge_control/Lauren directory, by the name of the text file. PowerSupply
+objects are called as such:
+
+.. code:: python
+
+  He4p = powersupply.PowerSupply('He4p.txt')
+
+You can call as many or as few connections as you like; thus, you can use the
+PowerSupply class for power supplies not normally involved in the He10 fridge
+control (i.e., for sending current through a Helmholtz coil).
 
 The serial_connections script establishes the power supply and ChaseLS class
 objects.  Importing this script allows you to create a usable connection with

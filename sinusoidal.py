@@ -11,8 +11,8 @@
 from powersupply import *
 from math import *
 
-def sinuvolt(A, freq, tint, tf, R, y=0, t0=0):
-	power=PS.PowerSupply(4,1)
+def sinuvolt(driverfile, A, freq, tint, tf, R, y=0, t0=0):
+	power=PS.PowerSupply(driverfile)
 	t=t0
 	while t<tf:
 		v=-0.5*A*cos(2*pi*freq*t)+(0.5*A)+y
