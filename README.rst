@@ -148,37 +148,6 @@ Celsius temperature for channel A, you could type
   ChaseLS.connex.write('CRDG? A\r\n')
   ChaseLS.readline()
 
-The following are PowerSupply functions, which are frequently called by other modules.
-
-- set_voltage: sets the voltage of a particular output to a given value (between 0.00 and the maximum output of the power supply)
-
-  - Parameters: voltage (float, out to 2 decimal places)
-
-- read_voltage: reads the voltage momentarily being outputted by the power supply (this will not be precisely what you told it to apply)
-
-  - Parameters: None
-
-- error: asks the power supply to read off all errors in queue
-
-  - Parameters: None
-
-- who_am_i: asks the power supply to return the identification for the power supply
-
-  - Parameters: None
-
-- remote_set: puts the power supply in remote mode
-
-  - Parameters: None
-
-- set_vi: sets both the voltage and the current output of the power supply
-
-  - Parameters: voltage (float); current (float)
-
-Sometimes, it is helpful to talk directly to the power supplies (when you need to look at something that is not a preset function).  Below is an example of how this could be called.
-
-.. code:: python
-  He4p.serial_connex.write('APPL? \r\n')
-
 Fridge logging
 --------------
 Relevant files:
