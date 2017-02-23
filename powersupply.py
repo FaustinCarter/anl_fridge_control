@@ -43,7 +43,7 @@ class PowerSupply(object):
 
 	# Set the power supply to operate remotely
 	def remote_set(self):
-		if self.remote is not None:
+		if self.remote is not 'None':
 			self.serial_connex.write(self.remote + self.term)
 		else:
 			pass
@@ -64,7 +64,10 @@ class PowerSupply(object):
 
 	# Read voltages from the power supply
 	def read_voltage(self):
-		self.serial_connex.write(self.select + self.sep + self.v_ask + self.term)
+		if self.select == 'None':
+			self.serial_connex.write(self.v_ask+self.term)
+		else:
+			self.serial_connex.write(self.select + self.sep + self.v_ask + self.term)
 		x = self.serial_connex.readline()
 		return x
 
@@ -73,8 +76,11 @@ class PowerSupply(object):
 		if not (voltage>=self.vmin and voltage<=self.vmax):
 			print 'Voltage out of range!'
 			return
-		if self.output_on is not None:
-			self.serial_connex.write(self.select + self.sep + self.output_on + self.term)
+		if self.output_on is not 'None':
+			if self.select != 'None':
+				self.serial_connex.write(self.output_on+self.term)
+			else:
+				self.serial_connex.write(self.select + self.sep + self.output_on + self.term)
 		self.serial_connex.write(self.v_apply + ' ' + str(voltage) + self.term)
 
 	def set_vi(self,voltage,current):

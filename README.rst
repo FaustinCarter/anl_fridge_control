@@ -31,7 +31,8 @@ He3UCp.txt, and He3UCs.txt.  Each driver file corresponds to one output on a
 power supply, and takes the following format.  All of the keys in this list are
 needed to make the connections and send the correct information, so it is important
 to include all of them and ensure that the information matches that which your
-power supply needs.
+power supply needs. In the case that a power supply does not take one of these keys
+(i.e., if it only has one output), then the key can be set equal to None.
 ::
   port=/dev/ttyr12
   baudrate=9600
