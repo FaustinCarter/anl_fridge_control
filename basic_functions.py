@@ -24,7 +24,7 @@ import he10_fridge_control.control.gettemp as gt
 
 import numpy as np
 from pydfmux.core.utils.conv_functs import build_hwm_query
-from anl_fridge_control.serial_connections import *
+import anl_fridge_control.serial_connections as sc
 
 ###############################################################################
 ############## Edit this first part to do what you want it to do ##############
@@ -88,13 +88,13 @@ def start_of_day(logfile, set_squid_feedback=False, set_gain=False):
 	'''
 	# set voltages to 0, let the switches cool
 	print 'Setting the switches to zero to cool.'
-	He3ICp.remote_set()
-	He3UCp.remote_set()
+	sc.He3ICp.remote_set()
+	sc.He3UCp.remote_set()
 
-	He3ICp.set_voltage(0)
-	He3ICs.set_voltage(0)
-	He3UCp.set_voltage(0)
-	He3UCs.set_voltage(0)
+	sc.He3ICp.set_voltage(0)
+	sc.He3ICs.set_voltage(0)
+	sc.He3UCp.set_voltage(0)
+	sc.He3UCs.set_voltage(0)
 
 	gt.gettemp(logfile, 'He3 IC Switch'); gt.gettemp(logfile, 'He3 UC Switch')
 	while float(gt.gettemp(logfile, 'He3 UC Switch'))>1:
@@ -104,12 +104,12 @@ def start_of_day(logfile, set_squid_feedback=False, set_gain=False):
 
 	# set UC pump voltage and start the heater to get above Tc
 	print 'Setting ultra pump to 3.00 V.'
-	He3UCp.set_voltage(3.00)
+	sc.He3UCp.set_voltage(3.00)
 	time.sleep(60)
 	print 'Setting the heater to 500 mK at 1.5 mW.'
-	ChaseLS.set_PID_temp(1,0.500)
+	sc.ChaseLS.set_PID_temp(1,0.500)
 	time.sleep(1)
-	ChaseLS.set_heater_range(2)
+	sc.ChaseLS.set_heater_range(2)
 	time.sleep(1)
 	gt.gettemp(logfile, 'UC Head')
 	while float(gt.gettemp(logfile, 'UC Head'))<0.500:
@@ -117,18 +117,18 @@ def start_of_day(logfile, set_squid_feedback=False, set_gain=False):
 		gt.gettemp(logfile, 'UC Head')
 	time.sleep(1)
 	print 'Setting the heater to 650 mK at 15 mW.'
-	ChaseLS.set_PID_temp(1, 0.650)
+	sc.ChaseLS.set_PID_temp(1, 0.650)
 	time.sleep(1)
-	ChaseLS.set_heater_range(3)
+	sc.ChaseLS.set_heater_range(3)
 	time.sleep(1)
 
 	print 'Setting the ultra pump to 1.50 V'
-	He3UCp.set_voltage(1.00)
+	sc.He3UCp.set_voltage(1.00)
 	while float(gt.gettemp(logfile, 'UC Head'))<0.650:
 		time.sleep(20)
 		gt.gettemp(logfile, 'UC Head')
 
-	He3UCp.set_voltage(1.50)
+	sc.He3UCp.set_voltage(1.50)
 	print 'Waiting...'
 	time.sleep(300)
 
@@ -185,17 +185,17 @@ def zero_everything():
 	'''
 	Sets UC and IC voltages on pumps and switches to 0, sets the heater temperature and range to 0.  A good safety measure for not accidentally blowing the cycle.
 	'''
-	He3ICp.set_voltage(0.00)
-	He3UCp.set_voltage(0.00)
+	sc.He3ICp.set_voltage(0.00)
+	sc.He3UCp.set_voltage(0.00)
 	time.sleep(1)
-	He3ICs.set_voltage(0.00)
-	He3UCs.set_voltage(0.00)
+	sc.He3ICs.set_voltage(0.00)
+	sc.He3UCs.set_voltage(0.00)
 	time.sleep(1)
-	He4p.set_voltage(0.00)
-	He4s.set_voltage(0.00)
-	ChaseLS.set_PID_temp(1,0.000)
+	sc.He4p.set_voltage(0.00)
+	sc.He4s.set_voltage(0.00)
+	sc.ChaseLS.set_PID_temp(1,0.000)
 	time.sleep(1)
-	ChaseLS.set_heater_range(0)
+	sc.ChaseLS.set_heater_range(0)
 
 def finish_cycle(hex_filename):
 	print 'Beginning the hex_watcher_3000 program to finish the cycle.'
@@ -209,19 +209,19 @@ def finish_cycle(hex_filename):
 	print 'Turning off inter pump and ultra pump.'
 	print datetime.datetime.now()
 
-	He3ICp.set_voltage(0.00)
-	He3UCp.set_voltage(0.00)
+	sc.He3ICp.set_voltage(0.00)
+	sc.He3UCp.set_voltage(0.00)
 
 	time.sleep(60)
 
 	print 'Turning on inter switch.'
 	print datetime.datetime.now()
-	He3ICs.set_voltage(4.00)
+	sc.He3ICs.set_voltage(4.00)
 	time.sleep(240)
 
 	print 'Turning on ultra switch.'
 	print datetime.datetime.now()
-	He3UCs.set_voltage(3.00)
+	sc.He3UCs.set_voltage(3.00)
 
 	print 'Waiting one hour for cooling...'
 	print datetime.datetime.now()
@@ -257,9 +257,9 @@ def autocycle(logfile, start=False):
 
 		print "Mezzanines off, ready to go."
 
-		He4p.remote_set()
-		He3ICp.remote_set()
-		He3UCp.remote_set()
+		sc.He4p.remote_set()
+		sc.He3ICp.remote_set()
+		sc.He3UCp.remote_set()
 
 		print 'Setting the heater, switches, and pumps to 0.'
 
@@ -278,13 +278,13 @@ def autocycle(logfile, start=False):
 		print ''
 
 		print 'Turning He4 pump to 12.00 V.'
-		He4p.set_voltage(12.00)
+		sc.He4p.set_voltage(12.00)
 
 		print 'Turning inter pump to 9.60 V.'
-		He3ICp.set_voltage(9.60)
+		sc.He3ICp.set_voltage(9.60)
 
 		print 'Turning ultra pump to 6.30 V.'
-		He3UCp.set_voltage(6.30)
+		sc.He3UCp.set_voltage(6.30)
 
 		print ''
 
@@ -297,13 +297,13 @@ def autocycle(logfile, start=False):
 			print ('%s minutes elapsed so far.' % minutes)
 
 		print 'Turning He4 pump to 9.50 V.'
-		He4p.set_voltage(9.50)
+		sc.He4p.set_voltage(9.50)
 
 		print 'Turning IC pump to 5.10 V.'
-		He3ICp.set_voltage(5.10)
+		sc.He3ICp.set_voltage(5.10)
 
 		print 'Turning UC pump to 5.30 V.'
-		He3UCp.set_voltage(5.30)
+		sc.He3UCp.set_voltage(5.30)
 
 		print 'Waiting 20 minutes.'
 		t=0
@@ -314,40 +314,40 @@ def autocycle(logfile, start=False):
 			print ('%s minutes elapsed so far.' % minutes)
 
 		print 'Turning He4 pump to 5.0 V.'
-		He4p.set_voltage(5.0)
+		sc.He4p.set_voltage(5.0)
 
 		print 'Waiting for He4 pump temperature to reach 43 K.'
 		while float(gt.gettemp(logfile, 'He4 IC Pump'))<43:
 			time.sleep(10)
 
 		print 'Turning He4 pump to 3.0 V.'
-		He4p.set_voltage(3.00)
+		sc.He4p.set_voltage(3.00)
 
 		print 'Waiting 5 minutes.'
 		time.sleep(300)
 
 		print 'Setting He4 pump to 0.0 V.'
-		He4p.set_voltage(0.00)
+		sc.He4p.set_voltage(0.00)
 
 		print 'Sleeping for 3 minutes.'
 		time.sleep(180)
 
 		print 'Setting He4 switch to 4.00 V.'
-		He4s.set_voltage(4.00)
+		sc.He4s.set_voltage(4.00)
 
 		print 'Waiting for He3 IC Pump temperatures to change.'
 		while float(gt.gettemp(logfile, 'He3 IC Pump'))<52:
 			time.sleep(10)
 
 		print 'Setting inter pump to 3.0 V.'
-		He3ICp.set_voltage(3.00)
+		sc.He3ICp.set_voltage(3.00)
 
 		print 'Waiting for He3 UC Pump temperature to change.'
 		while float(gt.gettemp(logfile, 'He3 UC Pump'))<52:
 			time.sleep(10)
 
 		print 'Setting ultra pump to 5.00 V.'
-		He3UCp.set_voltage(5.00)
+		sc.He3UCp.set_voltage(5.00)
 
 		finish_cycle(logfile)
 
