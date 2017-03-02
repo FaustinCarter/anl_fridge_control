@@ -271,14 +271,11 @@ SQUIDs and takes a rawdump.
   want to lower the temperature, be sure to change the PID temperature and
   heater range as well as the He3 UC pump voltage.
 
-    - It is suggested that the He3 UC pump voltage be set to 1.00 V if you want
+  - It is suggested that the He3 UC pump voltage be set to 1.00 V if you want
     to sit at 600 mK, and be turned to 0.00 V if you are planning on moving to a
     lower temperature.
 
-    - It is suggested that the PID heater range be set to
-
-- basic_functions.finish_cycle: Runs the part of a cycle that waits for the heat
-exchanger temperature to rise and then cools the fridge to base.
+- basic_functions.finish_cycle: Runs the part of a cycle that waits for the heat exchanger temperature to rise and then cools the fridge to base.
 
   - Called by other scripts; can be called if you are manually calling part of
   the cycle (i.e. if something goes wrong midway through)
