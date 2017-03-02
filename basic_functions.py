@@ -224,7 +224,7 @@ def autocycle(logfile, start=False):
 		ds.set_mezzanine_power(False,1)
 		ds.set_mezzanine_power(False,2)
 		time.sleep(60)
-		
+
 		print "Mezzanines off, ready to go."
 
 		sc.He4p.remote_set()
