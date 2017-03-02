@@ -9,6 +9,10 @@ from anl_fridge_control.basic_functions import finish_cycle
 
 
 def run():
+	'''
+	This function runs the first cycle of a cooldown.  Note that it takes more than
+	24 hours to run.
+	'''
 	# set the power supplies to remote mode
 	sc.He4p.remote_set()
 	sc.He3ICp.remote_set()
@@ -44,10 +48,10 @@ def run():
 	sc.He3ICp.set_voltage(he3icv)
 	sc.He3UCp.set_voltage(he3ucv)
 
-	# wait a really long time (we want ultra head and inter head to be cold)
-	print 'Waiting for pumps to heat (this will take a long time)'
+		print 'Waiting for pumps to heat (this will take a long time)'
 
 	try:
+		# heat up the pumps at a high voltage to help accelerate the process
 		while float(gt.gettemp(logfile, 'He4 IC Pump'))<30.00:
 			time.sleep(600)
 		he4v=7.50
@@ -63,9 +67,10 @@ def run():
 		he3icv=4.00
 		sc.He3ICp.set_voltage(he3icv)
 
+		# wait to help the pump temperatures keep rising to where we want them
+		time.sleep(60*60)
 
-		time.sleep(600)
-
+		# set stabilizing voltages
 		he4v=3.00
 		sc.He4p.set_voltage(he4v)
 		he3icv=3.20
@@ -73,9 +78,12 @@ def run():
 		he3ucv=4.60
 		sc.He3UCp.set_voltage(he3ucv)
 
+		# wait 2 hours for temperatures to hopefully settle
 		time.sleep(2*60*60)
 
-		while float(gt.gettemp(logfile, 'Ultra Head'))>4.00:
+		# wait for UC Head and IC Head to get cold
+		while float(gt.gettemp(logfile, 'UC Head'))>4.00:
+			# monitor temperatures and adjust voltage if needed
 			if float(gt.gettemp(logfile, 'He4 IC Pump'))>42.50:
 				he4v-=0.05
 				sc.He4p.set_voltage(he4v)
@@ -107,7 +115,7 @@ def run():
 			print "He4p: %s\r\nHe3ICp: %s\r\nHe3UCp: %s\r\n" %(he4v, he3icv, he3ucv)
 			time.sleep(60*60)
 
-		while float(gt.gettemp(logfile, 'Inter Head'))>4.00:
+		while float(gt.gettemp(logfile, 'IC Head'))>4.00:
 			if float(gt.gettemp(logfile, 'He4 IC Pump'))>42.50:
 				he4v-=0.05
 				sc.He4p.set_voltage(he4v)
@@ -140,6 +148,7 @@ def run():
 			time.sleep(60*60)
 
 	except:
+		# in case of crash, step the voltage down to zero after waiting for a fix
 		print datetime.datetime.now()
 		print "An error occurred!  Setting all pumps to nominally correct voltages for 4 hours."
 
@@ -166,12 +175,15 @@ def run():
 		print datetime.datetime.now()
 		quit()
 
+	# heat up the He4 pump to help with condensing
 	print "Ramping He4 Pump up to 44 K."
 	he4v=5.00
 	sc.He4p.set_voltage(he4v)
 	while float(gt.gettemp(logfile, 'He4 IC Pump'))<44.00:
 		time.sleep(10*60)
-		print "Waiting 1 hour for He-4 to condense."
+
+	# sleeping at (semi-)stable temperature to allow for condensing
+	print "Waiting 1 hour for He-4 to condense."
 	condense_time=0
 	while condense_time<60:
 		time.sleep(10*60)
@@ -183,12 +195,14 @@ def run():
 		condense_time+=10
 		print "Time elapsed: %s minutes" %(condense_time)
 
+	# turning off He4 pump and turning on switch
 	print "Turning off the He4 Pump."
 	sc.He4p.set_voltage(0.00)
 	time.sleep(2)
 	print "Turning on the He4 Switch to 4 V."
 	sc.He4s.set_voltage(4.00)
 
+	# heat the He3 pumps to help with condensing
 	print "Ramping He3 IC Pump to 54 K and He3 UC Pump to 51 K."
 	he3icv=5.20
 	sc.He3ICp.set_voltage(he3icv)
@@ -205,6 +219,7 @@ def run():
 			sc.He3ICp.set_voltage(he3icv)
 		time.sleep(60*60)
 
+	# wait for HEX to rise, turn off pumps, turn on switches
 	finish_cycle(logfile)
 
 if __name__=='__main__':

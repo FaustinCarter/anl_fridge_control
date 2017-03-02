@@ -240,22 +240,16 @@ Relevant files:
 
   - basic_functions.py
 
+  - autocycle.py
+
+  -first_cycle.py
+
 basic_functions.py contains various functions for day-to-day fridge control.
 
 - basic_functions.zero_everything: Turns all voltages to 0.00, and turns off the
 PID heater.
 
   - Parameters: None
-  - Returns: None
-
-- basic_functions.autocycle: Runs an automated cycle (takes about 9 hours)
-
-  - Parameters: current temperature logfile, start (default=False)
-
-    - The current logfile is whatever is created by the logger. You should be
-    using the file called he10_logs/xxxx_read.h5
-    - start=True tells the computer to run the start_of_day function after
-    completing the cycle.
 
   - Returns: None
 
@@ -286,8 +280,9 @@ SQUIDs and takes a rawdump.
 - basic_functions.finish_cycle: Runs the part of a cycle that waits for the heat
 exchanger temperature to rise and then cools the fridge to base.
 
-  - Called by other functions; can be called if you are manually calling part of
+  - Called by other scripts; can be called if you are manually calling part of
   the cycle (i.e. if something goes wrong midway through)
+
   - Parameters: current temperature logfile
 
     - The current logfile is whatever is created by the logger. You should be
@@ -295,7 +290,31 @@ exchanger temperature to rise and then cools the fridge to base.
 
   - Returns: None
 
-Pending update: autocycle will become an independent python script
+autocycle.py is a script that runs the day-to-day cycling code.  It should be
+called from the command line.
+
+- Parameters: None
+
+-Raw inputs:
+
+  - logfile: The file produced by anl_fridge_logger.py, which contains fridge
+  temperature data.
+
+  - hardware map yml file: The full path, starting at the home directory, to the
+  hardware map.  This is used exclusively to turn off the IceBoard mezzanines.
+
+- Returns: None
+
+first_cycle.py is a script that runs the specialized script for the first cycle
+of a cooldown. It should be called from the command line.
+
+- Parameters: None
+
+- Raw inputs:
+  - logfile: The file produced by anl_fridge_logger.py, which contains fridge
+  temperature data.
+
+- Returns: None (but hopefully a nice, cold fridge!)
 
 Wafer testing
 -------------
