@@ -92,6 +92,6 @@ class PowerSupply(object):
 			for line in f:
 				listedline = line.strip().decode('unicode-escape').split('=')
 				if len(listedline)>1:
-					out1[listedline[0]] = listedline[1]
+					out[listedline[0]] = listedline[1]
 			f.close()
 			return out
