@@ -15,7 +15,6 @@ from pydfmux.core.utils.conv_functs import build_hwm_query
 #from matplotlib.pylab import switch_backend
 #switch_backend('Agg')
 
-import pydfmux
 import os,time
 import sys
 sys.path.append('/home/spt3g/')
@@ -23,7 +22,6 @@ sys.path.append('/home/spt3g/')
 import he10_fridge_control.control.gettemp as gt
 
 import numpy as np
-from pydfmux.core.utils.conv_functs import build_hwm_query
 import anl_fridge_control.serial_connections as sc
 
 ###############################################################################
@@ -67,20 +65,6 @@ for bb in bolos.all():
 ###############################################################################
 ##### Items below do not need to be changed after setting for your fridge #####
 ###############################################################################
-
-#def hwm_bolodrop_test():
-#	He3UCs.set_voltage(0)
-#	He3ICs.set_voltage(0)
-#	He3UCp.set_voltage(0)
-#	He3ICp.set_voltage(0)
-#	ChaseLS.set_heater_range(3)
-#	time.sleep(1)
-#	ChaseLs.set_PID_temp(1,0.650)
-#	time.sleep(60)
-#	if 'good_bolos' in locals():
-#		overbias_results = good_bolos.overbias_and_null(cold_overbias=False, serialize=True,carrier_amplitude=0.0135, scale_by_frequency=True)
-#	else:
-#		overbias_results = bolos.overbias_and_null(cold_overbias=False, serialize=True,carrier_amplitude=0.0135, scale_by_frequency=True)
 
 def start_of_day(logfile, set_squid_feedback=False, set_gain=False):
 	'''
@@ -236,25 +220,11 @@ def autocycle(logfile, start=False):
 	This is a function to run a fridge cycle.  Note that it takes 6+ hours to run.
 	'''
 	try:
-		def mezz_question():
-			q=raw_input ('IMPORTANT: Did you turn off the mezzanines?  ')
-			if q in {'YES','Yes','yes','Y','y', 'affirmative', 'yup', 'si', 'oui'}:
-				return
-			else:
-				print ("Go turn off the mezzanines! I'll wait.")
-				time.sleep(30)
-				def redo():
-					p=raw_input ('Now did you turn them off?  ')
-					if p in {'Yes', 'yes', 'Y', 'y'}:
-						return
-					else:
-						print ("I will turn them off.  Please turn them off 							yourself next time.")
-						ds.set_mezzanine_power(False,1)
-						ds.set_mezzanine_power(False,2)
-						time.sleep(60)
-				redo()
-		mezz_question()
-
+		print "Turning off mezzanines."
+		ds.set_mezzanine_power(False,1)
+		ds.set_mezzanine_power(False,2)
+		time.sleep(60)
+		
 		print "Mezzanines off, ready to go."
 
 		sc.He4p.remote_set()

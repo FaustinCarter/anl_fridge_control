@@ -32,7 +32,46 @@ power supply, and takes the following format.  All of the keys in this list are
 needed to make the connections and send the correct information, so it is important
 to include all of them and ensure that the information matches that which your
 power supply needs. In the case that a power supply does not take one of these keys
-(i.e., if it only has one output), then the key can be set equal to None.
+(i.e., if it only has one output), then the key can be set equal to None (note that
+this is not the same as the parity option of none).
+
+List of driver file keys:
+
+  - port: the serial address of the power supply you are trying to acces
+
+  - baudrate: the baud rate for the serial connection (9600)
+
+  - parity: parity for the serial connection (odd, even, or none)
+
+  - stopbits: the stop bits for the serial connection (none, 1, or 2)
+
+  - bytesize: the number of bits for the serial connection (5, 6, 7, or 8)
+
+  - timeout: a timeout for the serial connection (1)
+
+  - term: termination character needed to end a command (\r\n)
+
+  - v_ask: statement to query the voltage output
+
+  - v_apply: statement to apply a voltage
+
+  - select: statement to select the desired output
+
+  - idn: statement to query the identification of the power supply
+
+  - output_on: statement to turn on the output
+
+  - remote: statement to set the power supply in remote mode
+
+  - error_ask: statement to query errors
+
+  - sep: separation character (for power supplies that require an output selection)
+
+  - vmin: the output's minimum allowable voltage
+
+  - vmax: the output's maximum allowable voltage
+
+So, below, you will find an example of a driver file.
 ::
   port=/dev/ttyr12
   baudrate=9600
@@ -51,6 +90,7 @@ power supply needs. In the case that a power supply does not take one of these k
   sep=;:
   vmin=0
   vmax=35
+
 
 At present, the connections to the power supplies and PID heater are controlled
 through two python modules, powersupply.py and lakeshore.py. Each of these
