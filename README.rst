@@ -204,7 +204,7 @@ Relevant files:
 
   - fridge_logger_anl.py
 
-The fridge_logger_anl.py code [[NOT CURRENTLY IN THIS REPO, will be updated soon]]
+The fridge_logger_anl.py code (https://github.com/adamanderson/he10_fridge_control/blob/master/logger/fridge_logger_anl.py)
 reads in data from Lakeshore340 and Lakeshore218 boxes. It then outputs data to
 a .h5 file and a _read.h5 file, which are used to create plots and current
 temperature readings on the website. The fridge logger can be called as
