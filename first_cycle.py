@@ -48,7 +48,7 @@ def run():
 	sc.He3ICp.set_voltage(he3icv)
 	sc.He3UCp.set_voltage(he3ucv)
 
-		print 'Waiting for pumps to heat (this will take a long time)'
+	print 'Waiting for pumps to heat (this will take a long time)'
 
 	try:
 		# heat up the pumps at a high voltage to help accelerate the process
