@@ -94,7 +94,7 @@ def run():
 			if float(gt.gettemp(logfile, 'He3 IC Pump'))>46.00 and he3icv>2.50:
 				he3icv-=0.05
 				sc.He3ICp.set_voltage(he3icv)
-			elif float(gt.gettemp(logfile, 'He3 IC Pump'))<44.00 and he3icv<3.50:
+			elif float(gt.gettemp(logfile, 'He3 IC Pump'))<44.00 and he3icv<4.00:
 				he3icv+=0.05
 				sc.He3ICp.set_voltage(he3icv)
 
