@@ -84,64 +84,52 @@ def run():
 		# wait for UC Head and IC Head to get cold
 		while float(gt.gettemp(logfile, 'UC Head'))>4.00:
 			# monitor temperatures and adjust voltage if needed
-			if float(gt.gettemp(logfile, 'He4 IC Pump'))>42.50:
+			if float(gt.gettemp(logfile, 'He4 IC Pump'))>42.50 and he4v>2.50:
 				he4v-=0.05
 				sc.He4p.set_voltage(he4v)
-			elif float(gt.gettemp(logfile, 'He4 IC Pump'))<40.00:
+			elif float(gt.gettemp(logfile, 'He4 IC Pump'))<40.00 and he4v<3.50:
 				he4v+=0.05
 				sc.He4p.set_voltage(he4v)
-			elif 40.00<=float(gt.gettemp(logfile, 'He4 IC Pump'))<=42.50:
-				pass
 
-			if float(gt.gettemp(logfile, 'He3 IC Pump'))>46.00:
+			if float(gt.gettemp(logfile, 'He3 IC Pump'))>46.00 and he3icv>2.50:
 				he3icv-=0.05
 				sc.He3ICp.set_voltage(he3icv)
-			elif float(gt.gettemp(logfile, 'He3 IC Pump'))<44.00:
+			elif float(gt.gettemp(logfile, 'He3 IC Pump'))<44.00 and he3icv<3.50:
 				he3icv+=0.05
 				sc.He3ICp.set_voltage(he3icv)
-			elif 44.00<=float(gt.gettemp(logfile, 'He3 IC Pump'))<=46.00:
-				pass
 
-			if float(gt.gettemp(logfile, 'He3 UC Pump'))>46.00:
+			if float(gt.gettemp(logfile, 'He3 UC Pump'))>46.00 and he3ucv>4.00:
 				he3ucv-=0.05
 				sc.He3UCp.set_voltage(he3ucv)
-			elif float(gt.gettemp(logfile, 'He3 UC Pump'))<44.00:
+			elif float(gt.gettemp(logfile, 'He3 UC Pump'))<44.00 and he3ucv<5.00:
 				he3icv=+0.05
 				sc.He3UCp.set_voltage(he3ucv)
-			elif 44.00<=float(gt.gettemp(logfile, 'He3 UC Pump'))<=46.00:
-				pass
 
 			print datetime.datetime.now()
 			print "He4p: %s\r\nHe3ICp: %s\r\nHe3UCp: %s\r\n" %(he4v, he3icv, he3ucv)
 			time.sleep(60*60)
 
 		while float(gt.gettemp(logfile, 'IC Head'))>4.00:
-			if float(gt.gettemp(logfile, 'He4 IC Pump'))>42.50:
+			if float(gt.gettemp(logfile, 'He4 IC Pump'))>42.50 and he4v>2.50:
 				he4v-=0.05
 				sc.He4p.set_voltage(he4v)
-			elif float(gt.gettemp(logfile, 'He4 IC Pump'))<40.00:
+			elif float(gt.gettemp(logfile, 'He4 IC Pump'))<40.00 and he4v<3.50:
 				he4v+=0.05
 				sc.He4p.set_voltage(he4v)
-			elif 40.00<=float(gt.gettemp(logfile, 'He4 IC Pump'))<=42.50:
-				pass
 
-			if float(gt.gettemp(logfile, 'He3 IC Pump'))>46.00:
+			if float(gt.gettemp(logfile, 'He3 IC Pump'))>46.00 and he3icv>2.50:
 				he3icv-=0.05
 				sc.He3ICp.set_voltage(he3icv)
-			elif float(gt.gettemp(logfile, 'He3 IC Pump'))<44.00:
+			elif float(gt.gettemp(logfile, 'He3 IC Pump'))<44.00 and he3icv<3.50:
 				he3icv+=0.05
 				sc.He3ICp.set_voltage(he3icv)
-			elif 44.00<=float(gt.gettemp(logfile, 'He3 IC Pump'))<=46.00:
-				pass
 
-			if float(gt.gettemp(logfile, 'He3 UC Pump'))>46.00:
+			if float(gt.gettemp(logfile, 'He3 UC Pump'))>46.00 and he3ucv>4.00:
 				he3ucv-=0.05
 				sc.He3UCp.set_voltage(he3ucv)
-			elif float(gt.gettemp(logfile, 'He3 UC Pump'))<44.00:
+			elif float(gt.gettemp(logfile, 'He3 UC Pump'))<44.00 and he3ucv<5.00:
 				he3icv=+0.05
 				sc.He3UCp.set_voltage(he3ucv)
-			elif 44.00<=float(gt.gettemp(logfile, 'He3 UC Pump'))<=46.00:
-				pass
 
 			print datetime.datetime.now()
 			print "He4p: %s\r\nHe3ICp: %s\r\nHe3UCp: %s\r\n" %(he4v, he3icv, he3ucv)
@@ -150,20 +138,29 @@ def run():
 	except:
 		# in case of crash, step the voltage down to zero after waiting for a fix
 		print datetime.datetime.now()
-		print "An error occurred!  Setting all pumps to nominally correct voltages for 4 hours."
+		print "An error occurred!  Setting all pumps to nominally correct voltages for 12 hours."
+		print "Will begin stepping down voltages after 12 hours of waiting."
 
 		sc.He4p.set_voltage(3.00)
 		sc.He3ICp.set_voltage(3.20)
 		sc.He3UCp.set_voltage(4.60)
-		time.sleep(4*60*60)
+		errortime=0
+		while errortime<(12*60*60):
+			time.sleep(60*60)
+			errortime+=1
+			print "INTERVENTION NEEDED! Waited %s of 12 hours so far." %(errortime)
 
 		print datetime.datetime.now()
-		print "Setting all pumps to 1.5 V for 1 hour."
+		print "Setting all pumps to 1.5 V for 3 hours."
 
 		sc.He4p.set_voltage(1.50)
 		sc.He3ICp.set_voltage(1.50)
 		sc.He3UCp.set_voltage(1.50)
-		time.sleep(60*60)
+		errortime=0
+		while errortime<(3*60*60):
+			time.sleep(60*60)
+			errortime+=1
+			print "INTERVENTION NEEDED! Waited %s of 3 hours so far." %(errortime)
 
 		print "Setting all pumps to 0 V."
 
@@ -171,7 +168,7 @@ def run():
 		sc.He3ICp.set_voltage(0.00)
 		sc.He3UCp.set_voltage(0.00)
 
-		print "Voltages stepped down to zero and cycle stopped."
+		print "Voltages stepped down to zero and cycle stopped.  Please do something."
 		print datetime.datetime.now()
 		quit()
 
