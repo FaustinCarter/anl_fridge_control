@@ -8,7 +8,7 @@
 # current.  This is to correct for the current maxing out when
 # no current is chosen.  LJS
 
-from powersupply import *
+import anl_fridge_control.powersupply as PS
 from math import *
 
 def sinuvolt(driverfile, A, freq, tint, tf, R, y=0, t0=0):
