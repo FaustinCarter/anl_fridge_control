@@ -24,7 +24,7 @@ def run():
 
 	# wait for the main plate to cool down enough to start a cycle
 	print 'Waiting for Main Plate to be below 3.5 K...'
-	while float(gt.gettemp(logfile, 'Main Plate'))>3.5:
+	while float(gt.gettemp(logfile, 'mainplate'))>3.5:
 		time.sleep(600)
 
 	# wait for switches to cool enough to not blow the cycle you are about to start
