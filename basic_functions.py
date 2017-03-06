@@ -10,6 +10,7 @@
 import serial
 import pydfmux
 import os,time
+import datetime
 import numpy as np
 from pydfmux.core.utils.conv_functs import build_hwm_query
 #from matplotlib.pylab import switch_backend
