@@ -77,7 +77,7 @@ class PowerSupply(object):
 			print 'Voltage out of range!'
 			return
 		if self.output_on is not 'None':
-			if self.select != 'None':
+			if self.select == 'None':
 				self.serial_connex.write(self.output_on+self.term)
 			else:
 				self.serial_connex.write(self.select + self.sep + self.output_on + self.term)
