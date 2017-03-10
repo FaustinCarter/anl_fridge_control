@@ -6,6 +6,7 @@ import sys
 sys.path.append('/home/spt3g/')
 import he10_fridge_control.control.gettemp as gt
 from anl_fridge_control.basic_functions import finish_cycle
+from anl_fridge_control.basic_functions import zero_everything
 import anl_fridge_control.serial_connections as sc
 
 
