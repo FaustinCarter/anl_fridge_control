@@ -1,3 +1,4 @@
+import pickle
 import tables
 import numpy as np
 import scipy
@@ -43,19 +44,25 @@ def read_netcdf_fast(ledgerman_filename,cal_factor_pa=cfp):
     return data_i, data_q, time_sec
 
 
-def make_IvT_function(data_i, time_sec, time_vals, temp_vals):
-    for tt in time_sec:
-        downsample_inds = []
-        if time_sec[np.where(time_sec==tt)][0] % 217 == 0:
-            downsample_inds.append(np.where(time_sec == tt))
-            sample_ixs = []
-            sample_times = []
-            sample_temps = []
-            for tm in time_vals:
-                if (tt-5)<=tm<=(tt+5):
-                    sample_ixs.append(np.where(time_vals==time))
-            for ix in sample_ixs:
-                sample_times.append(time_vals[ix])
-                sample_temps.append(temp_vals[ix])
-            tt_fit = scipy.interpolate.interp1d(sample_times, sample_temps)
-            print tt_fit
+def downsample_data(data_i):
+    # make a list of indices, every third index in the ledgerman file
+    linds = []
+    ind = 0
+    while ind < len(time_sec):
+        linds.append(ind)
+        ind += 3
+
+    # downsample the current data from the ledgerman file
+    data_downsample=dict()
+    for key in data_i.keys():
+        data_downsample[key] = []
+        for lind in linds:
+            data_downsample[key].append(data_i[key][lind])
+
+    return data_downsample
+
+
+def pickle_data(data_downsample, temp_vals, filename):
+    f=open(filename, 'w')
+    pickle.dump({"temp_vals":temp_vals, "data":data_downsample}, f)
+    f.close()
