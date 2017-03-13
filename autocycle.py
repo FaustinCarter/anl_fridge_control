@@ -8,6 +8,7 @@ import he10_fridge_control.control.gettemp as gt
 from anl_fridge_control.basic_functions import finish_cycle
 from anl_fridge_control.basic_functions import zero_everything
 import anl_fridge_control.serial_connections as sc
+import datetime
 
 
 
@@ -29,8 +30,7 @@ def autocycle():
 		print "Turning off mezzanines."
 		ds.set_mezzanine_power(False,1)
 		ds.set_mezzanine_power(False,2)
-		time.sleep(60)
-
+		
 		raw_input('Please press enter if the mezzanines are actually off (for testing).')
 		print "Mezzanines off, ready to go."
 
