@@ -6,8 +6,8 @@ from pydfmux.core.utils.transferfunctions import convert_TF
 
 cfp = convert_TF(15, 'carrier',unit='RAW')
 
-def read_temps(datafile, sensor='UC Head', starttime=1489167738.36, endtime=1489178950.07):
-	dataread = tables.open_file(datafile, 'r')
+def read_temps(tempfile, sensor='UC Head', starttime=1489167738.36, endtime=1489178950.07):
+	dataread = tables.open_file(tempfile, 'r')
 	datatable = dataread.get_node('/data/' + sensor.replace(' ', '_'))
 
 	for t in range(int(starttime), int(endtime+1)):
@@ -19,9 +19,9 @@ def read_temps(datafile, sensor='UC Head', starttime=1489167738.36, endtime=1489
 	return temp_vals, time_vals
 
 
-def read_netcdf_fast(filename,cal_factor_pa=cfp):
+def read_netcdf_fast(ledgerman_filename,cal_factor_pa=cfp):
 
-    data=Dataset(filename,'r',format='NETCDF4')
+    data=Dataset(ledgerman_filename,'r',format='NETCDF4')
     datavars=[var.rstrip('_I') for var in data.variables if '_I' in var]
 
     ixs = np.arange(len(data.variables['Time']), step=215)
@@ -47,13 +47,13 @@ def make_IvT_function(data_i, time_sec, time_vals, temp_vals):
     for tt in time_sec:
         downsample_inds = []
         if time_sec[np.where(time_sec==tt)][0] % 217 == 0:
-            downsample_inds.append(time_sec.index(tt))
+            downsample_inds.append(np.where(time_sec == tt))
             sample_ixs = []
             sample_times = []
             sample_temps = []
             for tm in time_vals:
                 if (tt-5)<=tm<=(tt+5):
-                    sample_ixs.append(time_vals.index(time))
+                    sample_ixs.append(np.where(time_vals==time))
             for ix in sample_ixs:
                 sample_times.append(time_vals[ix])
                 sample_temps.append(temp_vals[ix])
