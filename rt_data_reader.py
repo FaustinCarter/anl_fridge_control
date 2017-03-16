@@ -9,10 +9,23 @@ from pydfmux.core.utils.transferfunctions import convert_TF
 
 #def make_ob_dict(overbias_dir):
 
-
-cfp = convert_TF(15, 'carrier',unit='RAW')
-
 flex_to_mezzmods = {'0137':{'14':'13', '11':'14', '21':'21', '17':'23'}, '0135':{'27':'11'}}
+
+def make_cfp_dict(overbias_file):
+    for fc in flex_to_mezzmods[board]:
+        f=open(overbias_dir+'IceBoard_'+str(board)+'.Mezz_'+flex_to_mezzmods[board][fc][0]+'.ReadoutModule_'+flex_to_mezzmods[board][fc][1]+'_OUTPUT.pkl', 'r')
+        ob = pickle.load(f)
+        f.close()
+
+		cfp_dict = {}
+		for ix in ob['subtargets']:
+			freq = ob['subtargets'][ix]['frequency']
+			bolo = ob['subtargets'][ix]['bolometer']
+			cfp = convert_TF(15, 'carrier', unit='RAW', frequency=freq)
+			cfp_dict[bolo] = cfp
+	return cfp_dict
+
+#cfp = convert_TF(15, 'carrier',unit='RAW')
 
 def load_times(time_pkl):
 	f=open(time_pkl)
@@ -107,3 +120,46 @@ def convert_i2r(ds_data, board, overbias_dir):
                     data_r[ky] = ds_div
 
     return data_r
+
+def make_data_dict(data_r):
+	data_dict = {}
+	for bolo in data_r.keys():
+		if data_r[bolo] != []:
+			data_dict[str(bolo)] = {}
+	return data_dict
+
+def find_r_normal(data_r, ds_temps, temp_min, data_dict):
+	for bolo in data_dict.keys():
+		rnorms = []
+		for ix in range(len(ds_temps)):
+			if ds_temps[ix] > float(temp_min):
+				rnorms.append(data_r[bolo][ix])
+		rnorm_mean = mean(rnorms)
+		data_dict[bolo]['rnormal'] = rnorm_mean
+	return data_dict
+
+def find_r_parasitic(data_r, ds_temps, temp_max, data_dict):
+	for bolo in data_dict.keys():
+		rpars = []
+		for ix in range(len(ds_temps)):
+			if ds_temps[ix] < float(temp_max):
+				rpars.append(data_r[bolo][ix])
+		rpars_mean = mean(rpars)
+		data_dict[bolo]['rpar'] = rpars_mean
+	return data_dict
+
+bad_bolos = []
+def plot_each_bolo(ds_temps, data_r, data_dict):
+	for bolo in data_dict.keys():
+		plt.figure()
+		plt.plot(ds_temps, data_r[bolo], color='C0')
+		plt.axhline(data_dict[bolo]['rnormal'], color='C2')
+		plt.axhline(data_dict[bolo]['rpar'], color='C2')
+		plt.title(str(bolo))
+		plt.ylabel('Resistance ($\Omega$)')
+		plt.xlabel('Temperature (K)')
+		plt.show()
+
+def find_tc(data_r, ds_temps, temp_range, data_dict):
+	for bolo in data_dict.keys():
+		if bolo not in bad_bolos_all:
