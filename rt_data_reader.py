@@ -1,16 +1,21 @@
 import pickle
 import tables
 import numpy as np
+import math
 import scipy
 from netCDF4 import Dataset
 from pydfmux.core.utils.transferfunctions import convert_TF
 
+
+#def make_ob_dict(overbias_dir):
+    
+
 cfp = convert_TF(15, 'carrier',unit='RAW')
 
-flex_to_mezzmods = {'14':'13', '11':'14', '21':'21', '17':'23'}
+flex_to_mezzmods = {'0137':{'14':'13', '11':'14', '21':'21', '17':'23'}, '0135':{'27':'11'}}
 
 
-def read_temps(tempfile, sensor='UC Head', starttime=1489167738.36, endtime=1489178950.07):
+def read_temps(tempfile, sensor='UC Head', starttime=1489595720.07, endtime=1489595780.16):
 	dataread = tables.open_file(tempfile, 'r')
 	datatable = dataread.get_node('/data/' + sensor.replace(' ', '_'))
 
@@ -51,7 +56,7 @@ def model_temps(temp_vals, time_vals):
     tempfit = scipy.interpolate.interp1d(new_time_vals, temp_vals)
     return tempfit
 
-def downsample_data(time_sec, data_i, tempfit):
+def downsample_data(time_sec, data_i, data_q, tempfit):
     interp_temps = tempfit(time_sec[0:-3])
         
     ixs = []
@@ -64,7 +69,7 @@ def downsample_data(time_sec, data_i, tempfit):
     for key in data_i.keys():
         ds_data[key] = []
         for ix in ixs:
-            ds_data[key].append(data_i[key][ix])
+            ds_data[key].append(math.sqrt(data_i[key][ix]**2+data_q[key][ix]**2))
     ds_temps = []
     for ix in ixs:
         ds_temps.append(interp_temps[ix])
@@ -76,24 +81,20 @@ def pickle_data(ds_temps, ds_data, filename):
     pickle.dump({"temps":ds_temps, "data":ds_data}, f)
     f.close()
 
-def convert_i2r(ds_data, overbias_dir):
+def convert_i2r(ds_data, board, overbias_dir):
     data_r = dict()
-    for fc in flex_to_mezzmods:
-        f=open(overbias_dir+'IceBoard_0137.Mezz_'+flex_to_mezzmods[fc][0]+'.ReadoutModule_'+flex_to_mezzmods[fc][1]+'_OUTPUT.pkl', 'r')
+    for fc in flex_to_mezzmods[board]:
+        f=open(overbias_dir+'IceBoard_'+str(board)+'.Mezz_'+flex_to_mezzmods[board][fc][0]+'.ReadoutModule_'+flex_to_mezzmods[board][fc][1]+'_OUTPUT.pkl', 'r')
         ob = pickle.load(f)
         f.close()
 
         for ky in ds_data:
-            for key in ob['subtargets']:
-                if str(ky[-5:-3])==flex_to_mezzmods[fc]:
-                    if ob['subtargets'][key]['bolometer'].replace('/','_')==str(ky):
-                        ds_div = []
-                        no_ob = []
-                        for point in ds_data[ky]:
-                            if key in ob['overbiased'].keys():
-                                 ds_div.append(ob['overbiased'][key]['V']/point)
-                            else:
-                                 no_ob.append(ky)
-                        data_r[ky] = ds_div
+            for key in ob['subtargets'].keys():
+                if ob['subtargets'][key]['bolometer'].replace('/','_')==str(ky):
+                    ds_div=[]
+                    for point in ds_data[ky]:
+                        if key in ob['overbiased'].keys():
+                            ds_div.append(ob['overbiased'][key]['V']/point)
+                    data_r[ky] = ds_div
 
     return data_r
