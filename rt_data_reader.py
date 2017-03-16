@@ -8,14 +8,23 @@ from pydfmux.core.utils.transferfunctions import convert_TF
 
 
 #def make_ob_dict(overbias_dir):
-    
+
 
 cfp = convert_TF(15, 'carrier',unit='RAW')
 
 flex_to_mezzmods = {'0137':{'14':'13', '11':'14', '21':'21', '17':'23'}, '0135':{'27':'11'}}
 
+def load_times(time_pkl):
+	f=open(time_pkl)
+	start_end = pickle.load(f)
+	f.close()
 
-def read_temps(tempfile, sensor='UC Head', starttime=1489595720.07, endtime=1489595780.16):
+	starttime = start_end['start_time']
+	endtime = start_end['end_time']
+
+	return starttime, endtime
+
+def read_temps(tempfile, sensor='UC Head', starttime, endtime):
 	dataread = tables.open_file(tempfile, 'r')
 	datatable = dataread.get_node('/data/' + sensor.replace(' ', '_'))
 
@@ -58,7 +67,7 @@ def model_temps(temp_vals, time_vals):
 
 def downsample_data(time_sec, data_i, data_q, tempfit):
     interp_temps = tempfit(time_sec[0:-3])
-        
+
     ixs = []
     ix0 = 0
     while ix0 < len(time_sec):
