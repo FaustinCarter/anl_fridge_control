@@ -11,33 +11,33 @@ from pydfmux.core.utils.transferfunctions import convert_TF
 
 flex_to_mezzmods = {'0137':{'14':'13', '11':'14', '21':'21', '17':'23'}, '0135':{'27':'11'}}
 
-def make_cfp_dict(overbias_file):
+def make_cfp_dict(overbias_dir, board):
+    cfp_dict = {}
     for fc in flex_to_mezzmods[board]:
         f=open(overbias_dir+'IceBoard_'+str(board)+'.Mezz_'+flex_to_mezzmods[board][fc][0]+'.ReadoutModule_'+flex_to_mezzmods[board][fc][1]+'_OUTPUT.pkl', 'r')
         ob = pickle.load(f)
         f.close()
 
-		cfp_dict = {}
-		for ix in ob['subtargets']:
-			freq = ob['subtargets'][ix]['frequency']
-			bolo = ob['subtargets'][ix]['bolometer']
-			cfp = convert_TF(15, 'carrier', unit='RAW', frequency=freq)
-			cfp_dict[bolo] = cfp
-	return cfp_dict
+        for ix in ob['subtargets']:
+            freq = ob['subtargets'][ix]['frequency']
+            bolo = ob['subtargets'][ix]['bolometer']
+            cfp = convert_TF(15, 'carrier', unit='RAW', frequency=freq)
+            cfp_dict[bolo] = cfp
+    return cfp_dict
 
 #cfp = convert_TF(15, 'carrier',unit='RAW')
 
 def load_times(time_pkl):
-	f=open(time_pkl)
-	start_end = pickle.load(f)
-	f.close()
+    f=open(time_pkl, 'r')
+    start_end = pickle.load(f)
+    f.close()
 
-	starttime = start_end['start_time']
-	endtime = start_end['end_time']
+    starttime = start_end['start_time']
+    endtime = start_end['end_time']
 
-	return starttime, endtime
+    return starttime, endtime
 
-def read_temps(tempfile, sensor='UC Head', starttime, endtime):
+def read_temps(tempfile, starttime, endtime, sensor='UC Head'):
 	dataread = tables.open_file(tempfile, 'r')
 	datatable = dataread.get_node('/data/' + sensor.replace(' ', '_'))
 
@@ -49,7 +49,7 @@ def read_temps(tempfile, sensor='UC Head', starttime, endtime):
 	return temp_vals, time_vals
 
 
-def read_netcdf_fast(ledgerman_filename,cal_factor_pa=cfp):
+def read_netcdf_fast(ledgerman_filename,cfp_dict):
 
     data=Dataset(ledgerman_filename,'r',format='NETCDF4')
     datavars=[var.rstrip('_I') for var in data.variables if '_I' in var]
@@ -65,8 +65,8 @@ def read_netcdf_fast(ledgerman_filename,cal_factor_pa=cfp):
         i_comp=data.variables[var+'_I'][ixs]
         q_comp=data.variables[var+'_Q'][ixs]
         if 'L' not in var:
-            data_i[var]=i_comp*cal_factor_pa
-            data_q[var]=q_comp*cal_factor_pa
+            data_i[var]=i_comp*cfp_dict[str(var).replace('_','/')]#cal_factor_pa
+            data_q[var]=q_comp*cfp_dict[str(var).replace('_','/')]#cal_factor_pa
         else:
             data_i[var]=i_comp
             data_q[var]=q_comp
@@ -120,7 +120,7 @@ def convert_i2r(ds_data, board, overbias_dir):
                     data_r[ky] = ds_div
 
     return data_r
-
+'''
 def make_data_dict(data_r):
 	data_dict = {}
 	for bolo in data_r.keys():
@@ -163,3 +163,4 @@ def plot_each_bolo(ds_temps, data_r, data_dict):
 def find_tc(data_r, ds_temps, temp_range, data_dict):
 	for bolo in data_dict.keys():
 		if bolo not in bad_bolos_all:
+'''
